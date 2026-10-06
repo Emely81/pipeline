@@ -1,3 +1,4 @@
+
 name: Pipeline Seguro CI/CD - DevSecOps
 
 on:
@@ -60,7 +61,7 @@ jobs:
             --config=p/owasp-top-ten \
             --config=p/security-audit \
             --config=p/secrets \
-            --json --output=semgrep-results.json            
+            --json --output=semgrep-results.json
 
       - name: Avaliar a politica de portao (bloqueia so em ERROR)
         run: |
@@ -120,7 +121,7 @@ jobs:
       - name: Trivy - bloqueia em CRITICAL/HIGH
         uses: aquasecurity/trivy-action@v0.36.0
         with:
-          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           scan-type: 'fs'
           scan-ref: '.'
           severity: 'CRITICAL,HIGH'
@@ -132,6 +133,7 @@ jobs:
         if: always()
         uses: aquasecurity/trivy-action@v0.36.0
         with:
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           scan-type: 'fs'
           scan-ref: '.'
           severity: 'MEDIUM,LOW'
@@ -157,7 +159,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: docker/setup-buildx-action@v0.36.0
+      - uses: docker/setup-buildx-action@v3
 
       - name: Login no GitHub Container Registry
         uses: docker/login-action@v3
@@ -308,4 +310,5 @@ jobs:
         run: |
           echo "Aqui entraria a chamada ao seu webhook de notificacao."
           echo 'curl -X POST -H "Content-type: application/json" --data "{\"text\":\"Pipeline falhou\"}" $SLACK_WEBHOOK_URL'
- 
+
+
